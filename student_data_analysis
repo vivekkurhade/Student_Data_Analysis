@@ -1,0 +1,139 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Marks of students in Maths, Physics and Chemistry(Data)
+
+names = []
+first_names = ['John', 'Emma', 'Oliver', 'Sophia', 'James', 'Mia', 'Liam', 'Emily', 'Noah', 'Ava']
+last_names = ['Smith', 'Johnson', 'Brown', 'Williams', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez']
+
+for i in range(40):
+    x = (np.random.randint(0,10))
+    
+    y = (np.random.randint(0,10,))
+    
+    n = f"{first_names[x]} {last_names[y]}"
+    names.append(n)
+    
+Student_info = (np.random.randint(20,100, size=(40,3)))
+
+nam = np.array(names).reshape(40,1)
+# print(nam)
+Student_info = np.hstack([nam,Student_info])
+
+
+
+Student_Data = pd.DataFrame(Student_info,columns=['Student Name','Maths','Physics','Chemistry'])
+
+
+# <--------------------------------->
+
+#Basic Analysis
+print("Basic Analysis ----->")
+print()
+print()
+
+
+Student_Data['Maths'] = pd.to_numeric(Student_Data['Maths'], errors='coerce')
+Student_Data['Physics'] = pd.to_numeric(Student_Data['Physics'], errors='coerce')
+Student_Data['Chemistry'] = pd.to_numeric(Student_Data['Chemistry'], errors='coerce')
+
+
+Student_Data['Aggregate'] = Student_Data[['Maths','Physics','Chemistry']].sum(axis=1)
+Student_Data['Total'] = 300
+
+Student_Data['Average'] = (Student_Data[['Maths','Physics','Chemistry']].mean(axis=1))
+
+math_average = Student_Data['Maths'].mean()
+phy_average = Student_Data['Physics'].mean()
+chem_average = Student_Data['Chemistry'].mean()
+print()
+
+print("The average Maths Marks are : ",math_average)
+print("The average Physics Marks are : ",phy_average)
+print("The average Chemistry Marks are : ",chem_average)
+
+print()
+print("The Highest performer of All is : ",end ="")
+print(Student_Data.loc[Student_Data['Aggregate'].idxmax(),'Student Name'],end = '')
+print(' With',Student_Data['Aggregate'].max(),'marks')
+print()
+print(Student_Data.loc[Student_Data['Maths'].idxmin(),'Student Name'],"Got least in Maths",Student_Data['Maths'].min())
+print(Student_Data.loc[Student_Data['Maths'].idxmax(),'Student Name'],"Got Highest in Maths",Student_Data['Maths'].max())
+print(Student_Data.loc[Student_Data['Physics'].idxmin(),'Student Name'],"Got least in Physics",Student_Data['Physics'].min())
+print(Student_Data.loc[Student_Data['Physics'].idxmax(),'Student Name'],"Got Highest in Physics",Student_Data['Physics'].max())
+print(Student_Data.loc[Student_Data['Chemistry'].idxmin(),'Student Name'],"Got least in Chemistry",Student_Data['Chemistry'].min())
+print(Student_Data.loc[Student_Data['Chemistry'].idxmax(),'Student Name'],"Got Highest in Chemistry",Student_Data['Chemistry'].max())
+
+
+print()
+print("The Student Who Failed in Maths are : ")
+
+print(Student_Data.loc[(Student_Data['Maths']<40),'Student Name'])
+print()
+print("The Student Who Failed in Physics are : ")
+
+print(Student_Data.loc[(Student_Data['Physics']<40),'Student Name'])
+
+print()
+
+print("The Student Who Failed in Chemistry are : ")
+
+print(Student_Data.loc[(Student_Data['Chemistry']<40),'Student Name'])
+
+
+
+
+print()
+print()
+print("Advanced Anaylsis------>>")
+print()
+print()
+
+
+print("The Student Marks in Decreasing Order is : ")
+print(Student_Data[['Student Name','Aggregate']].sort_values(by = 'Aggregate',ascending=False))
+
+
+print()
+
+
+print("The number of Students Who Scored than Average in each Subject are as Follows : ")
+print("Maths average is:",Student_Data['Maths'].mean())
+
+print(Student_Data.loc[(Student_Data['Maths'])>(Student_Data['Maths'].mean()),['Student Name','Maths']])
+
+print()
+print("Physics average is:",Student_Data['Physics'].mean())
+
+print(Student_Data.loc[(Student_Data['Physics'])>(Student_Data['Physics'].mean()),['Student Name','Physics']])
+
+print()
+
+print("Chemistry average is:",Student_Data['Chemistry'].mean())
+
+print(Student_Data.loc[(Student_Data['Chemistry'])>(Student_Data['Chemistry'].mean()),['Student Name','Chemistry']])
+
+# print()
+# print(Student_Data)
+
+# print()
+
+
+
+# <--Visualization Part--->
+
+plt.figure(figsize=(12, 8))
+subjects = ['Maths', 'Physics', 'Chemistry']
+
+for subject in subjects:
+    plt.bar(Student_Data['Student Name'], Student_Data[subject], label=subject)
+
+plt.title('Score Distribution for Maths, Physics, and Chemistry')
+plt.xlabel('Students')
+plt.ylabel('Scores')
+plt.xticks(rotation=90)  
+plt.legend()  
+plt.tight_layout()
+plt.show()
